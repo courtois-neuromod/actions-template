@@ -1,13 +1,14 @@
 #!/bin/bash
 
+git config --global user.name "$1"
+git config --global user.email "$2"
+
 # Create ~/.ssh folder
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 
-
 # Add github as trusted hosts
 ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
-
 
 # Start ssh agent
 eval "$(ssh-agent -s)"
@@ -15,6 +16,8 @@ eval "$(ssh-agent -s)"
 ssh-add - <<< "${SECRET_KEY}"
 
 datalad install -r git@github.com:courtois-neuromod/${GITHUB_REPOSITORY##*/}.git
+
+cd ${GITHUB_REPOSITORY##*/}
 
 ret_code=0
 # test autoenabled special remotes
@@ -27,4 +30,4 @@ if $( git remote | grep -q -E '.*mri.sensitive$' ) ; then
   ret_code=$((ret_code + 2));
 fi
 
-return $ret_code
+exit $ret_code
