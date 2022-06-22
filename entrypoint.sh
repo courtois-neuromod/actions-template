@@ -1,9 +1,18 @@
 #!/bin/bash
 
+# Create ~/.ssh folder
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
 
-ssh-add - <<< "${SECRET_KEY}"
+
 # Add github as trusted hosts
 ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
+
+
+# Start ssh agent
+eval "$(ssh-agent -s)"
+# add bot ssh key
+ssh-add - <<< "${SECRET_KEY}"
 
 datalad install -r git@github.com:courtois-neuromod/${GITHUB_REPOSITORY##*/}.git
 
