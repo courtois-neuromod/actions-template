@@ -1,17 +1,5 @@
-name: 'Superdataset updater'
-description: "Updates TemplateFlow's superdataset when a template has changed"
-inputs:
-  name:
-    description: 'Name that will appear in the commit'
-    required: true
-    default: 'NiPreps Bot'
-  email:
-    description: 'Email that will appear in the commit'
-    required: true
-    default: 'nipreps@gmail.com'
+name: 'Datalad deploy test'
+description: "Test deploy of Courtois-Neuromod dataset"
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.name }}
-    - ${{ inputs.email }}
