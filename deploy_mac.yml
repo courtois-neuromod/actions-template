@@ -1,17 +1,44 @@
 name: deploy on macOS
+description: "Test deploy of Courtois-Neuromod dataset on MacOs"
+inputs:
+  name:
+    description: 'Name that will appear in the commit'
+    required: true
+    default: 'CNeuromod Bot'
+  email:
+    description: 'Email that will appear in the commit'
+    required: true
+    default: 'courtois.neuromod@gmail.com'
+secrets:
+  ssh_key:
+    required: true
+
+
 on:
   push:
     branches: [ $default-branch ]
   pull_request:
     branches: [ $default-branch ]
 jobs:
-  build:
+  deploy:
     runs-on: macos-latest
     steps:
       - name: Install datalad
         run: |
           brew update
           brew install datalad
+      - name: Setup git
+        run: |
+          git config --global user.name ${{ inputs.name }}
+          git config --global user.email ${{ inputs.email }}
+          mkdir -p /root/.ssh
+          chmod 700 /root/.ssh
+          # Add github as trusted hosts
+          ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
+          # Start ssh agent
+          eval "$(ssh-agent -s)"
+          # add bot ssh key
+          ssh-add - <<< "${{ secrets.token }}"
       - name: Test intalling the dataset
         run: |
           datalad install -r git@github.com:courtois-neuromod/${GITHUB_REPOSITORY##*/}.git
