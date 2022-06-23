@@ -1,6 +1,9 @@
 name: deploy on macOS
-on: push
-
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
 jobs:
   build:
     runs-on: macos-latest

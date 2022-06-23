@@ -1,0 +1,11 @@
+{
+    "name": "Datalad MacOs Deploy",
+    "description": "Deploy datalad on mac Workflow",
+    "iconName": "example-icon",
+    "categories": [
+        "datalad"
+    ],
+    "filePatterns": [
+        "README"
+    ]
+}
