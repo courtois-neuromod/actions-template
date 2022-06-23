@@ -23,11 +23,13 @@ ret_code=0
 # test autoenabled special remotes
 if ! $( git remote | grep -q -E '.*mri$' ) ; then
   ret_code=1;
+  echo "mri special remote is not autoenabled"
 fi
 
 # test sensitive special remotes not autoenabled
-if $( git remote | grep -q -E '.*mri.sensitive$' ) ; then
+if $( git remote | grep -q -E '.*sensitive$' ) ; then
   ret_code=$((ret_code + 2));
+  echo "sensitive special remote are mistakenly autoenabled"
 fi
 
 exit $ret_code
