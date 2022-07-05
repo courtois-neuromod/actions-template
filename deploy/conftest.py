@@ -28,4 +28,5 @@ def setup_git(
 def dataset():
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
     ds.repo.checkout(os.environ['GITHUB_SHA'])
-    return ds
+    yield ds
+    ds.uninstall(check=False) #teardown

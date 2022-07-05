@@ -32,4 +32,25 @@ if $( git remote | grep -q -E '.*sensitive$' ) ; then
   echo "sensitive special remote are mistakenly autoenabled"
 fi
 
+alias wanted_to_cmdline="sed -E  's|^|--|g;s| | --|g;s| --([a-z0-9]+)=([^ ]+)| --\1 \2|g'"
+
+mri_remote=$(git remote | grep 'mri$')
+#wanted_mri=$(git-annex wanted $mri_remote | wanted_to_cmdline)
+mri_sensitive_remote=$(git remote | grep mri.sensitive)
+#wanted_mri_sensitive=$(git-annex wanted $mri_sensitive_remote | wanted_to_cmdline)
+# check that no sensitive files are in the mri remote
+find_results=$(git-annex find --metadata 'distribution-restrictions=*' --in $mri_remote)
+if [ ! -z "$find_results" ] ; then
+  echo "sensitive data are present in $mri_remote:"
+  echo "$find_results"
+  ret_code=$((ret_code + 4));
+fi
+find_results=$(git-annex find --not --metadata 'distribution-restrictions=*' --not --in $mri_remote)
+if  [ ! -z "$find_results" ] ; then
+
+if git-annex fsck  -q --from $sensitive_remote --metadata distribution-restrictions=sensitive  ; then
+
+
+
+
 exit $ret_code
