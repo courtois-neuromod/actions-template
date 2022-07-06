@@ -1,17 +1,5 @@
 name: 'Datalad deploy test'
 description: "Test deploy of Courtois-Neuromod dataset"
-inputs:
-  name:
-    description: 'Name that will appear in the commit'
-    required: true
-    default: 'CNeuromod Bot'
-  email:
-    description: 'Email that will appear in the commit'
-    required: true
-    default: 'courtois.neuromod@gmail.com'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.name }}
-    - ${{ inputs.email }}

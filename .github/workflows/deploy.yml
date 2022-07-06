@@ -1,5 +1,15 @@
 name: 'Datalad deploy test'
 description: 'Datalad deploy test'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
+on:
+  workflow_call:
+    secrets:
+      ssh_key:
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Test deploy"
+        uses: courtois-neuromod/actions-template@main
+        env:
+          SECRET_KEY: ${{ secrets.CNEUROMOD_BOT_SSH_KEY }}
