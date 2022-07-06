@@ -11,4 +11,4 @@ jobs:
       - name: "Test deploy"
         uses: courtois-neuromod/actions-template@main
         env:
-          SECRET_KEY: ${{ secrets.CNEUROMOD_BOT_SSH_KEY }}
+          SECRET_KEY: ${{ secrets.ssh_key }}
