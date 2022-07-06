@@ -1,5 +1,4 @@
 name: 'Datalad deploy test'
-description: 'Datalad deploy test'
 on:
   workflow_call:
     secrets:
