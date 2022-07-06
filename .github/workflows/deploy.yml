@@ -1,0 +1,5 @@
+name: 'Datalad deploy test'
+description: 'Datalad deploy test'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
