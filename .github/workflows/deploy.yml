@@ -5,10 +5,12 @@ on:
       ssh_key:
         required: true
 jobs:
-  deploy:
+  deploy_in_container:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/courtois-neuromod/datalad:alpine
+      env:
+        SECRET_KEY: ${{ secrets.ssh_key }}
     steps:
       - name: "Test deploy"
-        uses: courtois-neuromod/actions-template@main
-        env:
-          SECRET_KEY: ${{ secrets.ssh_key }}
+        run: pytest /actions/tests
