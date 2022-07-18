@@ -12,5 +12,7 @@ jobs:
       env:
         SECRET_KEY: ${{ secrets.ssh_key }}
     steps:
+      - name: "install tests"
+        run: git clone git@github.com/$GITHUB_ACTION_REPOSITORY /actions
       - name: "Test deploy"
         run: pytest /actions/tests
