@@ -15,14 +15,19 @@ on:
     secrets:
       ssh_key:
         required: true
+      s3_access_key:
+        required: false
+      s3_secret_key:
+        required: false
 jobs:
   deploy:
     runs-on: macos-latest
     env:
       SECRET_KEY: ${{ secrets.ssh_key }}
-      GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
       GIT_USERNAME: ${{ inputs.name }}
       GIT_EMAIL: ${{ inputs.email }}
+      AWS_ACCESS_KEY_ID:  ${{ secrets.s3_access_key }}
+      AWS_SECRET_ACCESS_KEY:  ${{ secrets.s3_secret_key }}
     steps:
       - name: Install datalad
         run: |

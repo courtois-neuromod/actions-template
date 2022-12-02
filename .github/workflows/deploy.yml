@@ -15,16 +15,13 @@ on:
     secrets:
       ssh_key:
         required: true
+      s3_access_key:
+        required: false
+      s3_secret_key:
+        required: false
 jobs:
   deploy_in_container:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/courtois-neuromod/datalad:alpine
-      env:
-        SECRET_KEY: ${{ secrets.ssh_key }}
-        GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
-        GIT_USERNAME: ${{ inputs.name }}
-        GIT_EMAIL: ${{ inputs.email }}
     steps:
       - name: Checkout actions repo
         uses: actions/checkout@v3
@@ -32,4 +29,13 @@ jobs:
           repository: courtois-neuromod/actions-template
           path: ./actions
       - name: "Test deploy"
+        uses: docker://ghcr.io/courtois-neuromod/datalad:alpine
         run: pytest actions/tests
+        env:
+          SECRET_KEY: ${{ secrets.ssh_key }}
+          GIT_USERNAME: ${{ inputs.name }}
+          GIT_EMAIL: ${{ inputs.email }}
+          AWS_ACCESS_KEY_ID:  ${{ secrets.s3_access_key }}
+          AWS_SECRET_ACCESS_KEY:  ${{ secrets.s3_secret_key }}
+        volumes:
+          - $GITHUB_WORKSPACE/actions:/actions

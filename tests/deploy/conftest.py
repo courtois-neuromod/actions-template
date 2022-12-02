@@ -18,6 +18,9 @@ def setup_git(
 
     subprocess.call(["sh", '-c', f"ssh-keyscan -H github.com | install -m 600 /dev/stdin /{os.environ['HOME']}/.ssh/known_hosts"])
 
+    with open(f"/{os.environ['HOME']}/.ssh/known_hosts") as f:
+        print(f.read())
+        
     ssh_agent_setup.setup()
     # ensure a single line return at the end of the key
     secret_key = os.environ['SECRET_KEY'].rstrip('\n')+"\n"
