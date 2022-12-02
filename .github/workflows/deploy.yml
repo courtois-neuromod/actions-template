@@ -23,8 +23,8 @@ jobs:
       env:
         SECRET_KEY: ${{ secrets.ssh_key }}
         GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
-        GIT_USERNAME: ${{ input.name }}
-        GIT_EMAIL: ${{ input.email }}
+        GIT_USERNAME: ${{ inputs.name }}
+        GIT_EMAIL: ${{ inputs.email }}
     steps:
       - name: Checkout actions repo
         uses: actions/checkout@v3
