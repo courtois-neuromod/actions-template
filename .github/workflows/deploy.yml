@@ -15,16 +15,31 @@ on:
     secrets:
       ssh_key:
         required: true
+      s3_access_key:
+        required: false
+      s3_secret_key:
+        required: false
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout actions repo
+        uses: actions/checkout@v3
+        with:
+          repository: courtois-neuromod/actions-template
+          path: ./actions
+      - name: "Test deploy"
+        run: docker run -e GIT_EMAIL="${{ inputs.email }}" -e GIT_USERNAME="${{ inputs.name }}" -e SECRET_KEY="${{ secrets.ssh_key }}" -e AWS_ACCESS_KEY_ID="${{ secrets.s3_access_key }}" -e AWS_SECRET_ACCESS_KEY="${{ secrets.s3_secret_key }}" -v $GITHUB_WORKSPACE/actions:/actions ghcr.io/courtois-neuromod/datalad:alpine pytest /actions/tests
   deploy_in_container:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/courtois-neuromod/datalad:alpine
       env:
         SECRET_KEY: ${{ secrets.ssh_key }}
-        GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
         GIT_USERNAME: ${{ inputs.name }}
         GIT_EMAIL: ${{ inputs.email }}
+        AWS_ACCESS_KEY_ID:  ${{ secrets.s3_access_key }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.s3_secret_key }}
     steps:
       - name: Checkout actions repo
         uses: actions/checkout@v3
@@ -33,3 +48,5 @@ jobs:
           path: ./actions
       - name: "Test deploy"
         run: pytest actions/tests
+      - name: "troubleshooting"
+        run: ssh git@github.com
