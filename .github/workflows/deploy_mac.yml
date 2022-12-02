@@ -18,29 +18,21 @@ on:
 jobs:
   deploy:
     runs-on: macos-latest
+    environment:
+      SECRET_KEY: ${{ secrets.ssh_key }}
+      GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
+      GIT_USERNAME: ${{ input.name }}
+      GIT_EMAIL: ${{ input.email }}
     steps:
       - name: Install datalad
         run: |
           brew update
           brew install datalad
-      - name: Test intalling the dataset
-        shell: bash
-        env:
-          SSH_KEY: ${{ secrets.ssh_key }}
-        run: |
-          git config --global user.name ${{ inputs.name }}
-          git config --global user.email ${{ inputs.email }}
-          mkdir -p $HOME/.ssh
-          chmod 700 $HOME/.ssh
-          # Add github as trusted hosts
-          ssh-keyscan -H github.com >> $HOME/.ssh/known_hosts
-          chmod 600 $HOME/.ssh/known_hosts
-          # Start ssh agent
-          eval "$(ssh-agent -s)"
-          # add bot ssh key
-          ssh-add - <<< "$SSH_KEY"
-          # test install
-          datalad install -r git@github.com:courtois-neuromod/${GITHUB_REPOSITORY##*/}.git
-          cd ${GITHUB_REPOSITORY##*/}
-          # check available remotes
-          git remote -v
+          pip install pytest ssh_agent_setup
+      - name: Checkout actions repo
+        uses: actions/checkout@v3
+        with:
+          repository: courtois-neuromod/actions-template
+          path: ./actions
+      - name: "Test deploy"
+        run: pytest actions/tests

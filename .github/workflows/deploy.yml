@@ -1,6 +1,17 @@
 name: 'Datalad deploy test'
 on:
   workflow_call:
+    inputs:
+      name:
+        description: 'Name that will appear in the commit'
+        type: string
+        required: true
+        default: 'CNeuromod Bot'
+      email:
+        description: 'Email that will appear in the commit'
+        type: string
+        required: true
+        default: 'courtois.neuromod@gmail.com'
     secrets:
       ssh_key:
         required: true
@@ -12,6 +23,8 @@ jobs:
       env:
         SECRET_KEY: ${{ secrets.ssh_key }}
         GITHUB_ACTION_REPOSITORY: courtois-neuromod/actions-template
+        GIT_USERNAME: ${{ input.name }}
+        GIT_EMAIL: ${{ input.email }}
     steps:
       - name: Checkout actions repo
         uses: actions/checkout@v3

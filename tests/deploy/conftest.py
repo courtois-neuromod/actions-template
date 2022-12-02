@@ -7,8 +7,8 @@ from datalad.config import ConfigManager
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_git(
-        username='CNeuromod Bot',
-        email='courtois.neuromod@gmail.com'):
+        username=os.environ['GIT_USERNAME'],
+        email=os.environ['GIT_EMAIL']):
 
     config = ConfigManager()
     config.set('user.name', username, scope='global')
