@@ -28,7 +28,7 @@ jobs:
         run: |
           brew update
           brew install datalad
-          pip install pytest ssh_agent_setup
+          pip3 install pytest ssh_agent_setup
       - name: Checkout actions repo
         uses: actions/checkout@v3
         with:
