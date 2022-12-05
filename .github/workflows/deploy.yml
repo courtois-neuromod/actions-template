@@ -30,7 +30,8 @@ jobs:
           path: ./actions
       - name: "Test deploy"
         uses: docker://ghcr.io/courtois-neuromod/datalad:alpine
-        run: pytest actions/tests
+        with:
+          entrypoint: pytest actions/tests
         env:
           SECRET_KEY: ${{ secrets.ssh_key }}
           GIT_USERNAME: ${{ inputs.name }}
