@@ -1,7 +1,5 @@
 # Container image that runs your code
-FROM ghcr.io/templateflow/datalad:main
-
-RUN pip install --upgrade pytest datalad ssh_agent_setup
+FROM ghcr.io/courtois-neuromod/datalad:alpine
 
 ADD . /actions
 WORKDIR /actions
