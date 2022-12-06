@@ -20,7 +20,7 @@ def setup_git(
 
     with open(f"/{os.environ['HOME']}/.ssh/known_hosts") as f:
         print(f.read())
-        
+
     ssh_agent_setup.setup()
     # ensure a single line return at the end of the key
     secret_key = os.environ['SECRET_KEY'].rstrip('\n')+"\n"
@@ -30,7 +30,7 @@ def setup_git(
 
 
 @pytest.fixture(scope="session")
-def dataset():
+def dataset(setup_git):
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
     ds.repo.checkout(os.environ['GITHUB_SHA'])
     yield ds
