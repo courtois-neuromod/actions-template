@@ -23,7 +23,7 @@ jobs:
   deploy_in_container:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/courtois-neuromod/dataset-tests
+      image: ghcr.io/courtois-neuromod/dataset-tests:main
       env:
         SECRET_KEY: ${{ secrets.ssh_key }}
         GIT_USERNAME: ${{ inputs.name }}
@@ -32,4 +32,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.s3_secret_key }}
     steps:
       - name: "Test deploy"
-        run: pytest actions/tests
+        run: pytest /actions/tests
