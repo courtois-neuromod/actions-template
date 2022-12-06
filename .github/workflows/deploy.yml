@@ -22,20 +22,14 @@ on:
 jobs:
   deploy_in_container:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/courtois-neuromod/dataset-tests
+      env:
+        SECRET_KEY: ${{ secrets.ssh_key }}
+        GIT_USERNAME: ${{ inputs.name }}
+        GIT_EMAIL: ${{ inputs.email }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.s3_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.s3_secret_key }}
     steps:
-      - name: Checkout actions repo
-        uses: actions/checkout@v3
-        with:
-          repository: courtois-neuromod/actions-template
-          path: ./actions
       - name: "Test deploy"
-        uses: docker://ghcr.io/courtois-neuromod/datalad:alpine
         run: pytest actions/tests
-        env:
-          SECRET_KEY: ${{ secrets.ssh_key }}
-          GIT_USERNAME: ${{ inputs.name }}
-          GIT_EMAIL: ${{ inputs.email }}
-          AWS_ACCESS_KEY_ID:  ${{ secrets.s3_access_key }}
-          AWS_SECRET_ACCESS_KEY:  ${{ secrets.s3_secret_key }}
-        volumes:
-          - $GITHUB_WORKSPACE/actions:/actions
