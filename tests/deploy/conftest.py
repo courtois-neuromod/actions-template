@@ -32,6 +32,7 @@ def setup_git(
 @pytest.fixture(scope="session")
 def dataset(setup_git):
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
+    ds.repo.fetch(os.environ['GITHUB_REF'])
     ds.repo.checkout(os.environ['GITHUB_SHA'])
     yield ds
     ds.uninstall(check=False, recursive=True) #teardown
