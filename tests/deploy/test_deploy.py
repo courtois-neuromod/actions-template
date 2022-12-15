@@ -44,5 +44,5 @@ def get_public_siblings(dataset):
     public_siblings = [sib for sib in siblings if not sib.get('annex-ignore', False) and sib['name']!='here']
     #sibling_names = [sib['name'] for sib in public_siblings]
     #mri_siblings = [sn for sn in sibling_names if sn.split('.')[-1] == 'mri']
-    #assert len(mri_siblings) == 1, 'a single non-sensitive mri remote is expected'
+    assert len(public_siblings) > 0 , 'at least 1 public remote is required'
     return public_siblings
