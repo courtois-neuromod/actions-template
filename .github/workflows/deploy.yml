@@ -35,7 +35,5 @@ jobs:
         run: |
           mkdir -p /root/.ssh/
           ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
-      - name: "debug ssh"
-        run: ssh git@github.com -vvvv || true
       - name: "Test deploy"
         run: pytest /actions/tests
