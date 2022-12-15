@@ -6,7 +6,7 @@ def test_autoenable(dataset):
     siblings = dataset.siblings()
     sibling_names = [sib['name'] for sib in siblings]
     assert not any('sensitive' in sn for sn in sibling_names), 'Sensitive sibling is autoenabled'
-    assert any('mri' in sn for sn in sibling_names), 'MRI sibling is not autoenabled'
+    #assert any('mri' in sn for sn in sibling_names), 'MRI sibling is not autoenabled'
     ora_siblings = [sib for sib in siblings if
         sib.get('annex-type', None)=='external' and
         sib['annex-externaltype']=='ora']
@@ -20,12 +20,9 @@ def test_files_in_remote(dataset):
     #assert len(sensitive_siblings) == 0, 'sensitive data remote is not expected to be enabled'
 
     # check that shared files are listed on the share remote
-    print(public_siblings)
     for public_sibling in public_siblings:
         wanted_opts = utils.expr_to_opts(public_sibling.get('annex-wanted'))
 
-        print(['find', '--not', '--metadata', 'distribution-restrictions=*',
-        '--not', '--in', public_sibling['name']] + wanted_opts)
         shared_files_missing = list(ds_repo.call_annex_items_([
             'find', '--not', '--metadata', 'distribution-restrictions=*',
             '--not', '--in',  public_sibling['name']] + wanted_opts))
