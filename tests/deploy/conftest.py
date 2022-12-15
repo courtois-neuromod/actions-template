@@ -32,4 +32,4 @@ def dataset(setup_git):
     ds.repo.fetch('origin', os.environ['GITHUB_REF'])
     ds.repo.checkout(os.environ['GITHUB_SHA'])
     yield ds
-    ds.uninstall(check=False, recursive=True) #teardown
+    #ds.uninstall(check=False, recursive=True) #teardown
