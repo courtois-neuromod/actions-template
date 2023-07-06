@@ -9,8 +9,10 @@ def test_autoenable(dataset):
     #assert any('mri' in sn for sn in sibling_names), 'MRI sibling is not autoenabled'
     ora_siblings = [sib for sib in siblings if
         sib.get('annex-type', None)=='external' and
-        sib['annex-externaltype']=='ora']
-    assert len(ora_siblings) == 0, f"ORA remotes {sib['name'] for sib in ora_siblings} are autoenabled"
+        sib['annex-externaltype']=='ora' and
+        not sib.get('annex-httpalso', None) == 'true']
+    ora_siblings_names = list(sib['name'] for sib in ora_siblings)
+    assert len(ora_siblings) == 0, f"ORA remotes {','.join(ora_siblings_names)} are autoenabled"
 
 def test_files_in_remote(dataset):
     ds_repo = dataset.repo
