@@ -33,7 +33,7 @@ def test_files_in_remote(dataset):
         # check all files are in the shared remote
         fsck_res = ds_repo.fsck(remote=public_sibling, fast=True)
         fsck_fails = [fr for fr in fsck_res if not fr['success']]
-        assert len(fsck_fails) == 0, f"git-annex fsck on {mri_sibling} failed: {fsck_fails}"
+        assert len(fsck_fails) == 0, f"git-annex fsck on {public_sibling} failed: {fsck_fails}"
 
         # check that sensitive files are not in the shared remote
         sensitive_files_shared = list(ds_repo.call_annex_items_([
