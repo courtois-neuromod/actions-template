@@ -9,8 +9,10 @@ def test_autoenable(dataset):
     #assert any('mri' in sn for sn in sibling_names), 'MRI sibling is not autoenabled'
     ora_siblings = [sib for sib in siblings if
         sib.get('annex-type', None)=='external' and
-        sib['annex-externaltype']=='ora']
-    assert len(ora_siblings) == 0, f"ORA remotes {sib['name'] for sib in ora_siblings} are autoenabled"
+        sib['annex-externaltype']=='ora' and
+        not sib.get('annex-httpalso', None) == 'true']
+    ora_siblings_names = list(sib['name'] for sib in ora_siblings)
+    assert len(ora_siblings) == 0, f"ORA remotes {','.join(ora_siblings_names)} are autoenabled"
 
 def test_files_in_remote(dataset):
     ds_repo = dataset.repo
@@ -21,6 +23,7 @@ def test_files_in_remote(dataset):
 
     # check that shared files are listed on the share remote
     for public_sibling in public_siblings:
+        print(f"checking file availability in {public_sibling}")
         wanted_opts = utils.expr_to_opts(public_sibling.get('annex-wanted'))
 
         shared_files_missing = list(ds_repo.call_annex_items_([
@@ -31,7 +34,7 @@ def test_files_in_remote(dataset):
         # check all files are in the shared remote
         fsck_res = ds_repo.fsck(remote=public_sibling, fast=True)
         fsck_fails = [fr for fr in fsck_res if not fr['success']]
-        assert len(fsck_fails) == 0, f"git-annex fsck on {mri_sibling} failed: {fsck_fails}"
+        assert len(fsck_fails) == 0, f"git-annex fsck on {public_sibling} failed: {fsck_fails}"
 
         # check that sensitive files are not in the shared remote
         sensitive_files_shared = list(ds_repo.call_annex_items_([
