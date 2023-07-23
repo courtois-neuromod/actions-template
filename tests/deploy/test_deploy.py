@@ -43,12 +43,13 @@ def test_files_in_remote(dataset):
         assert len(sensitive_files_shared) == 0, f"Sensitive files mistakenly shared: \n{sensitive_files_shared}"
 
 def test_get_submodules(dataset):
-    ds.get('.', recursive=True, recursion_limit=1, get_data=False)
+    dataset.get('.', recursive=True, recursion_limit=1, get_data=False)
 
 def get_public_siblings(dataset):
     siblings = dataset.siblings()
     public_siblings = [sib for sib in siblings if not sib.get('annex-ignore', False) and sib['name']!='here']
     #sibling_names = [sib['name'] for sib in public_siblings]
     #mri_siblings = [sn for sn in sibling_names if sn.split('.')[-1] == 'mri']
-    assert len(public_siblings) > 0 , 'at least 1 public remote is required'
+    if len(dataset.repo.get_annexed_files()) > 0:
+        assert len(public_siblings) > 0 , 'at least 1 public remote is required'
     return public_siblings
