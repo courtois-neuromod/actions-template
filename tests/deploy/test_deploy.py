@@ -43,7 +43,7 @@ def test_files_in_remote(dataset):
         assert len(sensitive_files_shared) == 0, f"Sensitive files mistakenly shared: \n{sensitive_files_shared}"
 
 def test_get_submodules(dataset):
-    ds.get('.', recursive=True, recursion_limit=1, data=False)
+    ds.get('.', recursive=True, recursion_limit=1, get_data=False)
 
 def get_public_siblings(dataset):
     siblings = dataset.siblings()
