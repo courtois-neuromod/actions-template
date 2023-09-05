@@ -32,7 +32,7 @@ def test_files_in_remote(dataset):
         assert len(shared_files_missing) == 0, f"Files missing in shared remote { public_sibling['name']}: \n{shared_files_missing}"
 
         # check all files are in the shared remote
-        fsck_res = ds_repo.fsck(remote=public_sibling, fast=True)
+        fsck_res = ds_repo.fsck(remote=public_sibling['name'], fast=True)
         fsck_fails = [fr for fr in fsck_res if not fr['success']]
         assert len(fsck_fails) == 0, f"git-annex fsck on {public_sibling} failed: {fsck_fails}"
 
