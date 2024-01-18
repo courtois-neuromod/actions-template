@@ -5,6 +5,8 @@ import ssh_agent_setup
 from datalad.api import install
 from datalad.config import ConfigManager
 
+GIT_ANNEX_TEST_BRANCH='dev'
+
 @pytest.fixture(scope="session", autouse=True)
 def setup_git(
         username=os.environ['GIT_USERNAME'],
@@ -31,7 +33,7 @@ def dataset(setup_git):
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
     ds.repo.fetch('origin', os.environ['GITHUB_REF'])
     if os.environ['GITHUB_REF'] == 'git-annex':
-        ds.repo.checkout('main')
+        ds.repo.checkout(GIT_ANNEX_TEST_BRANCH)
     else:
         ds.repo.checkout(os.environ['GITHUB_SHA'])
     yield ds
