@@ -32,9 +32,8 @@ def setup_git(
 def dataset(setup_git):
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
     ds.repo.fetch('origin', os.environ['GITHUB_REF'])
-    if os.environ['GITHUB_REF'] == 'git-annex':
-        ds.repo.checkout(GIT_ANNEX_TEST_BRANCH)
-    else:
-        ds.repo.checkout(os.environ['GITHUB_SHA'])
+    commitish = GIT_ANNEX_TEST_BRANCH if os.environ['GITHUB_REF_NAME'] == 'git-annex' else os.environ['GITHUB_SHA']
+    print(f"checking out {commitish}")
+    ds.repo.checkout(commitish)
     yield ds
     #ds.uninstall(check=False, recursive=True) #teardown
