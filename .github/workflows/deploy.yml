@@ -39,4 +39,4 @@ jobs:
           ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
       - name: "Test deploy"
         run: |
-          pytest /actions/tests || git -C ${GITHUB_REPOSITORY#*/} status && git -C ${GITHUB_REPOSITORY#*/} show
+          pytest /actions/tests
