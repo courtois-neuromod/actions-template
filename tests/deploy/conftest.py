@@ -7,6 +7,9 @@ from datalad.config import ConfigManager
 
 GIT_ANNEX_TEST_BRANCH='dev'
 
+import logging
+logger = logging.getLogger(__name__)
+
 @pytest.fixture(scope="session", autouse=True)
 def setup_git(
         username=os.environ['GIT_USERNAME'],
@@ -33,7 +36,7 @@ def dataset(setup_git):
     ds = install(f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git")
     ds.repo.fetch('origin', os.environ['GITHUB_REF'])
     commitish = GIT_ANNEX_TEST_BRANCH if os.environ['GITHUB_REF_NAME'] == 'git-annex' else os.environ['GITHUB_SHA']
-    print(f"checking out {commitish}")
+    logger.info(f"checking out {commitish}")
     ds.repo.checkout(commitish)
     yield ds
     #ds.uninstall(check=False, recursive=True) #teardown

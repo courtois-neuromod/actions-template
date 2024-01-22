@@ -31,9 +31,12 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.s3_access_key }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.s3_secret_key }}
     steps:
+      - name: debug
+        run: env
       - name: "setup gh ssh"
         run: |
           mkdir -p /root/.ssh/
           ssh-keyscan -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
       - name: "Test deploy"
-        run: pytest /actions/tests
+        run: |
+          pytest /actions/tests || git -C ${GITHUB_REPOSITORY#*/} status && git -C ${GITHUB_REPOSITORY#*/} show

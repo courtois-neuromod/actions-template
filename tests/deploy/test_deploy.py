@@ -2,6 +2,9 @@ import os
 import pytest
 from . import utils
 
+import logging
+logger = logging.getLogger(__name__)
+
 def test_autoenable(dataset):
     siblings = dataset.siblings()
     sibling_names = [sib['name'] for sib in siblings]
@@ -23,7 +26,7 @@ def test_files_in_remote(dataset):
 
     # check that shared files are listed on the share remote
     for public_sibling in public_siblings:
-        print(f"checking file availability in {public_sibling}")
+        logger.info(f"checking file availability in {public_sibling}")
         wanted_opts = utils.expr_to_opts(public_sibling.get('annex-wanted'))
 
         shared_files_missing = list(ds_repo.call_annex_items_([
