@@ -44,10 +44,18 @@ def install_ds(protocol='ssh'):
     if protocol=='https':
         url = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}.git"
     ds = install(path=f"ds_{protocol}", source=url)
-    ds.repo.fetch('origin', os.environ['GITHUB_REF'])
-    commitish = GIT_ANNEX_TEST_BRANCH if 'git-annex' in os.environ['GITHUB_REF_NAME'] else os.environ['GITHUB_SHA']
-    logger.info(f"checking out {commitish}")
-    ds.repo.checkout(commitish)
+    if 'git-annex' in os.environ['GITHUB_HEAD_REF']:
+        ds.repo.fetch('origin', GIT_ANNEX_TEST_BRANCH)
+        logger.info(f"testing git-annex branch changes: checking out {GIT_ANNEX_TEST_BRANCH}")
+        ds.repo.checkout(GIT_ANNEX_TEST_BRANCH)
+    else:
+        ds.repo.fetch('origin', os.environ['GITHUB_SHA'])
+        ref_name = os.environ['GITHUB_REF'].replace('refs/','')
+        logger.info(f"checking out {ref_name}")
+        ds.repo.checkout(os.environ['GITHUB_SHA'])
+        #logger.info(f"resetting branch to {os.environ['GITHUB_SHA']}")
+        #ds.repo.call_git(["reset", "--hard", os.environ['GITHUB_SHA']])
+
     yield ds
     ds.drop(reckless='kill', recursive=True) #teardown
 
