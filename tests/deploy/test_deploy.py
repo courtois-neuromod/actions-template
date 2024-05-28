@@ -5,6 +5,15 @@ from . import utils
 import logging
 logger = logging.getLogger(__name__)
 
+# check for https://github.com/datalad/datalad/issues/7604
+# has to run first, before `setup_ssh`
+@pytest.mark.order(1)
+def test_get_submodules_https_parent(dataset_https):
+    dataset_https.get('.', recursive=True, recursion_limit=1, get_data=False)
+
+def test_get_submodules(dataset):
+    dataset.get('.', recursive=True, recursion_limit=1, get_data=False)
+
 def test_autoenable(dataset):
     siblings = dataset.siblings()
     sibling_names = [sib['name'] for sib in siblings]
@@ -46,8 +55,6 @@ def test_files_in_remote(dataset):
             '--in', public_sibling['name']]))
         assert len(sensitive_files_shared) == 0, f"Sensitive files mistakenly shared: \n{sensitive_files_shared}"
 
-def test_get_submodules(dataset):
-    dataset.get('.', recursive=True, recursion_limit=1, get_data=False)
 
 def get_public_siblings(dataset):
     siblings = dataset.siblings()
