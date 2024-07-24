@@ -36,7 +36,11 @@ def test_files_in_remote(dataset):
     # check that shared files are listed on the share remote
     for public_sibling in public_siblings:
         logger.info(f"checking file availability in {public_sibling}")
-        wanted_opts = utils.expr_to_opts(public_sibling.get('annex-wanted'))
+        sibling_wanted = public_sibling.get('annex-wanted')
+        if sibling_wanted == 'groupwanted':
+            sibling_group = ds_repo.call_annex_oneline(['group', public_sibling['name']])
+            sibling_wanted = ds_repo.get_groupwanted(sibling_group)
+        wanted_opts = utils.expr_to_opts(sibling_wanted)
 
         shared_files_missing = list(ds_repo.call_annex_items_([
             'find', '--not', '--metadata', 'distribution-restrictions=*',
