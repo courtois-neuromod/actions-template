@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VALIDATOR_IMAGE: ghcr.io/courtois-neuromod/bids-validator:main
-      VALIDATOR_OPTIONS: "--ignoreNiftiHeaders"
+      VALIDATOR_OPTIONS: --ignoreNiftiHeaders
       # ignores to work on datalad repos without getting files
       VALIDATOR_CONFIG: |
         {
@@ -30,9 +30,9 @@ jobs:
         id: json-yaml-validate
         uses: GrantBirki/json-yaml-validate@v3.2.1
 
-
       # Runs a single command using the runners shell
       - name: bids-validator
         run: |
           echo "${VALIDATOR_CONFIG}" > ${TMP_CONFIG_PATH}
-          docker run -v $GITHUB_WORKSPACE:/bids $VALIDATOR_IMAGE -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids
+          echo "docker run -v $TMP_CONFIG_PATH:$TMP_CONFIG_PATH -v ${GITHUB_WORKSPACE}:/bids ${VALIDATOR_IMAGE} -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids"
+          docker run -v $TMP_CONFIG_PATH:$TMP_CONFIG_PATH -v ${GITHUB_WORKSPACE}:/bids ${VALIDATOR_IMAGE} -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids
