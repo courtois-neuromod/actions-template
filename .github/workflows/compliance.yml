@@ -1,4 +1,4 @@
-name: json-yaml-validate
+name: compliance testing
 on:
   workflow_call:
 
@@ -34,5 +34,4 @@ jobs:
       - name: bids-validator
         run: |
           echo "${VALIDATOR_CONFIG}" > ${TMP_CONFIG_PATH}
-          echo "docker run -v $TMP_CONFIG_PATH:$TMP_CONFIG_PATH -v ${GITHUB_WORKSPACE}:/bids ${VALIDATOR_IMAGE} -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids"
           docker run -v $TMP_CONFIG_PATH:$TMP_CONFIG_PATH -v ${GITHUB_WORKSPACE}:/bids ${VALIDATOR_IMAGE} -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids
