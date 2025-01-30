@@ -1,0 +1,45 @@
+name: json-yaml-validate
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  bids-validate:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      VALIDATOR_IMAGE: registry.gitlab.unf-montreal.ca/ni-dataops/containers/bids-validator:latest
+      VALIDATOR_OPTIONS: "--ignoreNiftiHeaders"
+      # ignores to work on datalad repos without getting files
+      VALIDATOR_CONFIG: |
+        {
+          "ignore": [
+            {"code": "TSV_COLUMN_MISSING", "location": "**_scans.tsv"},
+            {"code": "TSV_ADDITIONAL_COLUMNS_UNDEFINED", "location": "**_scans.tsv"},
+            {"code": "TSV_COLUMN_MISSING", "location": "**_events.tsv"},
+            {"code": "SCANS_FILENAME_NOT_MATCH_DATASET"}
+          ]
+        }
+      TMP_CONFIG_PATH: /tmp/bids-validator_config.json
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: json-yaml-validate
+        id: json-yaml-validate
+        uses: GrantBirki/json-yaml-validate@v3.2.1
+
+
+      # Runs a single command using the runners shell
+      - name: bids-validator
+        run: |
+          echo "${VALIDATOR_CONFIG}" > ${TMP_CONFIG_PATH}
+          docker run -v $GITHUB_WORKSPACE:/bids $VALIDATOR_IMAGE -c ${TMP_CONFIG_PATH} ${VALIDATOR_OPTIONS} /bids
