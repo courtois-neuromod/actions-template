@@ -19,7 +19,7 @@ def setup_git(
     config = ConfigManager()
     config.set('user.name', username, scope='global')
     config.set('user.email', email, scope='global')
-    config.set('annex.security.allowed-ip-addresses', '10.10.10.20', scope='global')
+    config.set('annex.security.allowed-ip-addresses', '10.10.10.25', scope='global')
 
 @pytest.fixture(scope="session")
 def setup_ssh():
@@ -42,7 +42,10 @@ def dataset(setup_git, setup_ssh):
 def install_ds(protocol='ssh'):
     url = f"git@github.com:{os.environ['GITHUB_REPOSITORY']}.git"
     if protocol=='https':
-        url = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}.git"
+        username_token=""
+        if 'GIT_TOKEN' in os.environ:
+            username_token = f"{os.environ['GIT_TOKEN']}@"
+        url = f"https://{username_token}github.com/{os.environ['GITHUB_REPOSITORY']}.git"
     ds = install(path=f"ds_{protocol}", source=url)
     if 'git-annex' in os.environ['GITHUB_HEAD_REF']:
         ds.repo.fetch('origin', GIT_ANNEX_TEST_BRANCH)
