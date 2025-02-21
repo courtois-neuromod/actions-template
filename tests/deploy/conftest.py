@@ -23,6 +23,8 @@ def setup_git(
 
 @pytest.fixture(scope="session")
 def setup_ssh():
+    if os.environ.get("RUNNER_OS") == "windows":
+        return
     os.makedirs(os.path.join(os.environ['HOME'],'.ssh'), mode=700, exist_ok=True)
 
     subprocess.call(["sh", '-c', f"ssh-keyscan -H github.com | install -m 600 /dev/stdin /{os.environ['HOME']}/.ssh/known_hosts"])
